@@ -23,7 +23,7 @@ export const Background = styled.div`
 `;
 
 export const Main = styled.main`
-  z-index: 99;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: space-around;
