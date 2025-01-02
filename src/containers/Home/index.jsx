@@ -1,6 +1,14 @@
 import { useState, useEffect } from "react";
 
-import api from "../../services/api.js";
+import { useNavigate } from "react-router";
+
+import {
+  getMovies,
+  getTopMovies,
+  getTopSeries,
+  getSeries,
+  getArtists,
+} from "../../services/getData.js";
 import getImage from "../../utils/getImage.js";
 
 import { Background, Main, Info, Poster } from "./styles.js";
@@ -17,53 +25,29 @@ function Home() {
   const [popSeries, setPopSeries] = useState();
   const [artists, setArtists] = useState();
 
+  const nav = useNavigate();
+
   useEffect(() => {
-    async function getMovies() {
-      const {
-        data: { results },
-      } = await api.get("/movie/popular");
-
-      setMainMovie(results[0]);
-      setPopMovies(results);
+    async function getAllData() {
+      Promise.all([
+        getMovies(),
+        getTopMovies(),
+        getTopSeries(),
+        getSeries(),
+        getArtists(),
+      ])
+        .then(([popMovies, topMovies, topSeries, popSeries, topArtists]) => {
+          setMainMovie(popMovies[0]);
+          setPopMovies(popMovies);
+          setTopMovies(topMovies);
+          setTopSeries(topSeries);
+          setPopSeries(popSeries);
+          setArtists(topArtists);
+        })
+        .catch((error) => console.error(error.message));
     }
 
-    async function getTopMovies() {
-      const {
-        data: { results },
-      } = await api.get("/movie/top_rated");
-
-      setTopMovies(results);
-    }
-
-    async function getTopSeries() {
-      const {
-        data: { results },
-      } = await api.get("/tv/top_rated");
-
-      setTopSeries(results);
-    }
-
-    async function getSeries() {
-      const {
-        data: { results },
-      } = await api.get("/tv/popular");
-
-      setPopSeries(results);
-    }
-
-    async function getArtists() {
-      const {
-        data: { results },
-      } = await api.get("/person/popular");
-
-      setArtists(results);
-    }
-
-    getMovies();
-    getTopMovies();
-    getTopSeries();
-    getSeries();
-    getArtists();
+    getAllData();
   }, []);
 
   return (
@@ -78,7 +62,12 @@ function Home() {
               <h1>{mainMovie.title}</h1>
               <p>{mainMovie.overview}</p>
               <div>
-                <Button button={1}>Assista Agora</Button>
+                <Button
+                  button={1}
+                  onClick={() => nav(`/details/:${mainMovie.id}`)}
+                >
+                  Assista Agora
+                </Button>
                 <Button button={0} onClick={() => setShowModal(true)}>
                   Assista o Trailer
                 </Button>
