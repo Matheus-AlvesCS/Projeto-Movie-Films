@@ -9,7 +9,7 @@ function Modal({ movieId, showModal }) {
 
   useEffect(() => {
     async function getTrailer() {
-      setTrailer(await getMovieTrailer(movieId));
+      setTrailer(await getMovieTrailer(movieId, true));
     }
 
     getTrailer();

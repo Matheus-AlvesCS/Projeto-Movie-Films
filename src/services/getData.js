@@ -1,11 +1,11 @@
 import api from "./api";
 
-export async function getMovies(main = false) {
+export async function getMovies() {
   const {
     data: { results },
   } = await api.get("/movie/popular");
 
-  return main ? results[0] : results;
+  return results;
 }
 
 export async function getTopMovies() {
@@ -40,10 +40,32 @@ export async function getArtists() {
   return results;
 }
 
-export async function getMovieTrailer(movieId) {
+export async function getMovieTrailer(movieId, main = false) {
   const {
     data: { results },
   } = await api.get(`/movie/${movieId}/videos`);
 
-  return results[1];
+  return main ? results[1] : results;
+}
+
+export async function getDetailsById(movieId) {
+  const { data } = await api.get(`/movie/${movieId}`);
+
+  return data;
+}
+
+export async function getSimilars(movieId) {
+  const {
+    data: { results },
+  } = await api.get(`/movie/${movieId}/similar`);
+
+  return results;
+}
+
+export async function getCredtis(movieId) {
+  const {
+    data: { cast },
+  } = await api.get(`/movie/${movieId}/credits`);
+
+  return cast;
 }

@@ -64,7 +64,7 @@ function Home() {
               <div>
                 <Button
                   button={1}
-                  onClick={() => nav(`/details/:${mainMovie.id}`)}
+                  onClick={() => nav(`/details/${mainMovie.id}`)}
                 >
                   Assista Agora
                 </Button>
